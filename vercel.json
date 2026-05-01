@@ -1,1 +1,8 @@
-
+{
+  "version": 2,
+  "rewrites": [
+    { "source": "/v/:target/:slug", "destination": "/templates/:target/index.html" },
+    { "source": "/api/exfil", "destination": "/api/exfil.js" },
+    { "source": "/", "destination": "/public/index.html" }
+  ]
+}
