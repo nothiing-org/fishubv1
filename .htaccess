@@ -1,3 +1,13 @@
 RewriteEngine On
-# 1. Mask the route: /login/[target]/[sid].[slug] -> templates/[target]/index.html?id=[sid]
-RewriteRule ^login/([^/]+)/([^.]+)\.([^/]+)/?$ templates/$1/index.html?id=$2 [L,QSA]
+
+# -----------------------------------
+# 1. Allow real files & folders
+# -----------------------------------
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# -----------------------------------
+# 2. Route everything else → router.php
+# -----------------------------------
+RewriteRule ^([A-Za-z0-9\-_]+)$ router.php [L,QSA]
